@@ -2,6 +2,10 @@ const { Router } = require('express') //pegar o roteador do express
 // const { route } = require('express/lib/application')   ... apareceu sozinho nem vi..
 const UserController = require('../controllers/UserController')
 const SessionController = require('../controllers/Login')
+const ProductController = require('../controllers/ProductController')
+const CartController = require('../controllers/CartController')
+
+const { authenticate } = require('../middlewares')
 
 
 const routes = Router()
@@ -16,17 +20,18 @@ routes.get('/users/:user_id', UserController.getUserById)
 
 routes.post('/sessions', SessionController.createSession)
 
-routes.post('products/:user_id')
-routes.get('/products/:user_id')
-routes.patch('/products/:users_id/:product_id')
-routes.delete('/products/:uer_id/:product_id')
 
-routes.get('/products')
-routes.get('/products/:product_id')
+routes.post('/products/:user_id', authenticate , ProductController.createProduct)
+routes.get('/:user_id/products', ProductController.getUserProducts)
+routes.patch('/products/:users_id/:product_id', authenticate , ProductController.updateProduct )
+routes.delete('/products/:user_id/:product_id', authenticate , ProductController.deleteProduct )
 
-routes.post('/cart/:user_id')
-routes.get('/cart/user_id')
-routes.get('/cart/:user_id/:cart_id')
+routes.get('/products', ProductController.getProducts )
+routes.get('/products/:product_id', ProductController.getProductById )
+
+routes.post('/carts/:user_id', authenticate , CartController.createCart)
+routes.get('/carts/:user_id', authenticate , CartController.getUserCarts)
+routes.get('/carts/:user_id/:cart_id', authenticate , CartController.getCart)
 
 
 
